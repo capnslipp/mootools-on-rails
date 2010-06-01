@@ -1,0 +1,53 @@
+= Mootools On Rails
+
+
+== How to Install
+
+Follow these three steps:
+
+1. Run the following task: 
+	rake mootools_on_rails:install
+
+2. Add the following line in your layout:
+	<%= javascript_include_tag :mootools %>
+
+3. Add the following line in your RAILS_ROOT/config/routes.rb
+	ActionController::Routing::Routes.draw do |map|
+	  ...
+	  MootoolsOnRails.routes
+	  ...
+	end
+	
+That's it!
+
+
+== How to Use
+
+=== Event Behaviour
+
+In your view :
+
+  <% add_event('link', 'click') {|page| page.alert('coucou div 2') } %>
+  
+  <%= content_tag(:a, "My Link", :id => 'link') %>
+  
+
+
+== More Documentation
+
+http://www.mootoolsonrails.com/ (note: currently down)
+http://dev.kawooa.org/projects/mootools-on-rails/wiki/Mootools+On+Rails (note: also currently down)
+
+
+== Contributors
+
+Thank you to:
+
+- Mathieu Fosse
+- Grzegorz Kazulak
+
+
+== Credits
+
+* This plugin is inspired by the "YUI On Rails" plugin by "PJ Hyett".
+* The unobtrusive_javascript plugin is by Luke Redpath (http://www.lukeredpath.co.uk) and Dan Webb (http://www.vivabit.com/bollocks).
