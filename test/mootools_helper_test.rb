@@ -42,7 +42,7 @@ class MootoolsHelperTest < Test::Unit::TestCase
   end
 
   def test_form_remote_tag_with_method
-    assert_equal "<form action=\"http://www.example.com/posts/new\" method=\"post\" onsubmit=\"new Request($merge({data: this.toQueryString()}, {evalScripts:true, url:'http://www.example.com/posts/new'})).send(); return false;\"><div style=\"margin:0;padding:0\"><input name=\"_method\" type=\"hidden\" value=\"put\" /></div>", 
+    assert_equal "<form action=\"http://www.example.com/posts/new\" method=\"post\" onsubmit=\"new Request($merge({data: this.toQueryString()}, {evalScripts:true, url:'http://www.example.com/posts/new'})).send(); return false;\"><div style=\"margin:0;padding:0;display:inline\"><input name=\"_method\" type=\"hidden\" value=\"put\" /></div>", 
       form_remote_tag(:url => {:controller => 'posts', :action => 'new'}, :html => { :method => :put })
   end
   
@@ -71,7 +71,7 @@ class MootoolsHelperTest < Test::Unit::TestCase
   
   def test_replace_html
     a_paragraph = "<p>A paragraph</p>";
-    assert_equal "$('my-id').set({\"html\": \"#{a_paragraph}\"});",
+    assert_equal "$('my-id').set({\"html\":\"#{a_paragraph}\"});",
       @generator.replace_html('my-id', '<p>A paragraph</p>')
   end
   
@@ -96,7 +96,7 @@ class MootoolsHelperTest < Test::Unit::TestCase
     assert_equal "$(\"my-id\").setStyles({display:''});",
       @generator.show('my-id')
       
-    assert_equal "[\"my-id1\", \"my-id2\"].each(function(element){$(element).setStyles({display:'none'});});",
+    assert_equal "[\"my-id1\",\"my-id2\"].each(function(element){$(element).setStyles({display:'none'});});",
       @generator.hide('my-id1', 'my-id2')
   end
   
@@ -104,7 +104,7 @@ class MootoolsHelperTest < Test::Unit::TestCase
     assert_equal "$(\"my-id\").setStyles({display:'none'});",
       @generator.hide('my-id')
       
-    assert_equal "[\"my-id1\", \"my-id2\"].each(function(element){$(element).setStyles({display:'none'});});",
+    assert_equal "[\"my-id1\",\"my-id2\"].each(function(element){$(element).setStyles({display:'none'});});",
       @generator.hide('my-id1', 'my-id2')
   end
   
