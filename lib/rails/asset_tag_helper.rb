@@ -7,19 +7,27 @@ module ActionView::Helpers::AssetTagHelper
   @@javascript_default_sources = JAVASCRIPT_DEFAULT_SOURCES.dup
     
   def javascript_include_tag(*sources)
+    options = sources.extract_options!.stringify_keys
+    @min  = options.delete('min')
+    
     if sources.delete :mootools
       sources = sources.concat(
-        [MOOTOOLS_CORE_SOURCE, MOOTOOLS_MORE_SOURCE, 'application', behaviours_url]
+        [minifiable(MOOTOOLS_CORE_SOURCE), minifiable(MOOTOOLS_MORE_SOURCE), 'application', behaviours_url]
       ).uniq
     elsif sources.delete :defaults
-      sources = [MOOTOOLS_CORE_SOURCE, MOOTOOLS_MORE_SOURCE, 'mootools_patch', 'application', behaviours_url].concat(sources)
+      sources = [minifiable(MOOTOOLS_CORE_SOURCE), minifiable(MOOTOOLS_MORE_SOURCE), 'mootools_patch', 'application', behaviours_url].concat(sources)
     end
     
     
     rails_javascript_include_tag(*sources)
   end
   
-  protected  
+  protected
+    def minifiable(source)
+      source += '.min' if @min
+      source
+    end
+    
     def behaviours_url
       action_path = case @controller.request.path
         when '', '/'

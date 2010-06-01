@@ -8,8 +8,9 @@ Follow these three steps:
 1. Run the following task: 
 	rake mootools_on_rails:install
 
-2. Add the following line in your layout:
+2. Add _one_ of the following lines to your layout:
 	<%= javascript_include_tag :mootools %>
+	<%= javascript_include_tag :mootools, :min => (RAILS_ENV != 'development') %>
 
 3. Add the following line in your RAILS_ROOT/config/routes.rb
 	ActionController::Routing::Routes.draw do |map|
