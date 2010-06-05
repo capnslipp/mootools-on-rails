@@ -3,26 +3,43 @@ module ActionView::Helpers::AssetTagHelper
   
   MOOTOOLS_CORE_SOURCE = 'mootools-1.2.4-core'
   MOOTOOLS_MORE_SOURCE = 'mootools-1.2.4.4-more'
-  JAVASCRIPT_DEFAULT_SOURCES = [MOOTOOLS_CORE_SOURCE, MOOTOOLS_MORE_SOURCE, 'application', 'mootools_patch']
-  @@javascript_default_sources = JAVASCRIPT_DEFAULT_SOURCES.dup
     
   def javascript_include_tag(*sources)
     options = sources.extract_options!.stringify_keys
+    @sources = sources
     @min  = options.delete('min')
     
-    if sources.delete :mootools
-      sources = sources.concat(
-        [minifiable(MOOTOOLS_CORE_SOURCE), minifiable(MOOTOOLS_MORE_SOURCE), 'application', behaviours_url]
-      ).uniq
-    elsif sources.delete :defaults
-      sources = [minifiable(MOOTOOLS_CORE_SOURCE), minifiable(MOOTOOLS_MORE_SOURCE), 'mootools_patch', 'application', behaviours_url].concat(sources)
-    end
+    replace_source(
+      :defaults,
+      [:mootools, 'application', :behaviours]
+    )
     
+    replace_source(
+      :mootools,
+      [minifiable(MOOTOOLS_CORE_SOURCE), minifiable(MOOTOOLS_MORE_SOURCE), 'mootools_patch']
+    )
     
-    rails_javascript_include_tag(*sources)
+    replace_source(
+      :behaviours,
+      [behaviours_url]
+    )
+    
+    rails_javascript_include_tag(*@sources)
+  ensure
+    @sources, @min = nil
   end
   
   protected
+    def replace_source(original_source, replacement_sources)
+      replace_index = @sources.index(original_source)
+      unless replace_index.nil?
+        # insert after, preserving the index of the source we're replacing
+        @sources.insert(replace_index + 1, *replacement_sources)
+        @sources.delete_at(replace_index)
+      end
+      @sources
+    end
+    
     def minifiable(source)
       source += '.min' if @min
       source
